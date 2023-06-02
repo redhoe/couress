@@ -1,0 +1,48 @@
+package modeler
+
+import "encoding/json"
+
+type ConfigAppLink struct {
+	Name string `json:"name"`
+	Uri  string `json:"uri"`
+}
+
+type ConfigApp struct {
+	ApiDomain                    string          `json:"api_domain"`                        // api域名
+	FileDomain                   string          `json:"file_domain"`                       // 文件域名
+	Website                      string          `json:"website"`                           // 官网
+	UserAgreementByDocumentTagId int             `json:"user_agreement_by_document_tag_id"` // 用户协议文档 tag ID
+	UsdGkeyByDocumentTagId       string          `json:"usd_gkey_by_document_tag_id"`       // Gkey使用教程
+	ConnGkeyByDocumentTagId      string          `json:"conn_gkey_by_document_tag_id"`      // 链接Gkey教程
+	BuyGkeyByDocumentTagId       string          `json:"buy_gkey_by_document_tag_id"`       // 购买和了解Gkey
+	ShopUrl                      string          `json:"shop_url"`                          // 商城url
+	Links                        []ConfigAppLink `json:"links,omitempty"`                   // 相关链接
+	RsaPubkey                    string          `json:"rsa_pubkey,omitempty"`              // rsa公钥
+	PushSwitch                   bool            `json:"push_switch,omitempty"`             // 上传敏感信息开关
+	DownUrl                      string          `json:"down_url,omitempty"`                // 下载地址
+}
+
+func (a *ConfigApp) Key() string {
+	return "app"
+}
+
+func (a *ConfigApp) Desc() string {
+	return "app配置"
+}
+
+func (a *ConfigApp) String() string {
+	b, _ := json.Marshal(a)
+	return string(b)
+}
+
+func (a *ConfigApp) FromString(str string) error {
+	return json.Unmarshal([]byte(str), a)
+}
+
+var DefaultConfigApp = &ConfigApp{
+	ApiDomain:                    "http://127.0.0.1:1232",
+	FileDomain:                   "http://127.0.0.1:1232",
+	Website:                      "http://127.0.0.1:1232",
+	UserAgreementByDocumentTagId: 0,
+	Links:                        nil,
+}

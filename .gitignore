@@ -1,0 +1,7 @@
+.idea
+logs
+build
+deploy
+config.yaml
+static
+*.json
