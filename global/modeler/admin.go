@@ -1,9 +1,9 @@
 package modeler
 
 import (
-	"app/utils/simple"
 	"errors"
 	"github.com/jameskeane/bcrypt"
+	"github.com/redhoe/couress/utils/simple"
 	"gorm.io/gorm"
 	"time"
 )
