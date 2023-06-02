@@ -246,7 +246,7 @@ func (c *ChainSwapConfig) Scan(input interface{}) error {
 
 type ChainNode struct {
 	MysqlModel
-	ChainId                int64      `json:"chain_id" gorm:"unique;comment:链Id"`
+	ChainId                uint       `json:"chain_id" gorm:"unique;comment:链Id"`
 	LastHandlerBlockNumber *int64     `json:"last_handler_block_number" gorm:"comment:最后处理块"`
 	LastHandlerTime        *time.Time `json:"last_handler_time" gorm:"comment:最后处理时间"`
 	LastNetBlockNumber     *int64     `json:"last_net_block_number" gorm:"comment:网络块高"`
@@ -272,7 +272,7 @@ func (this *ChainNode) CheckByChainId(db *gorm.DB, chainId uint) bool {
 	if this.Id != 0 {
 		return true
 	} else {
-		this.ChainId = int64(chainId)
+		this.ChainId = chainId
 		this.LastHandlerBlockNumber = lo.ToPtr(int64(0))
 		this.LastNetBlockNumber = lo.ToPtr(int64(0))
 		this.LastHandlerTime = lo.ToPtr(time.Now())
