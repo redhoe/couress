@@ -4,13 +4,7 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"fmt"
-	"github.com/btcsuite/btcd/btcutil"
-	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/demdxx/gocast"
-	ethCommon "github.com/ethereum/go-ethereum/common"
-	tronAddress "github.com/fbsobreira/gotron-sdk/pkg/address"
-
-	"github.com/pkg/errors"
 	"github.com/samber/lo"
 	"github.com/shopspring/decimal"
 	"gorm.io/gorm"
@@ -200,40 +194,6 @@ func (c *Chain) GetRecord(db *gorm.DB, column, value interface{}) bool {
 		return true
 	}
 	return false
-}
-
-func (c *Chain) CheckAddress(address string) (string, bool, error) {
-	switch c.Type {
-	case ChainTypeETHEREUM:
-		if ethCommon.IsHexAddress(address) {
-			return ethCommon.HexToAddress(address).String(), true, nil
-		} else {
-			return "", false, errors.Errorf("ethereum check address = %s", address)
-		}
-	case ChainTypeBITCOIN:
-		if c.Testnet {
-			addr, err := btcutil.DecodeAddress(address, &chaincfg.TestNet3Params)
-			if err != nil {
-				return "", false, errors.WithMessagef(err, "btc check address = %s", address)
-			}
-			return addr.String(), true, nil
-		} else {
-			addr, err := btcutil.DecodeAddress(address, &chaincfg.MainNetParams)
-			if err != nil {
-				return "", false, errors.WithMessagef(err, "btc check address = %s", address)
-			}
-			return addr.String(), true, nil
-		}
-	case ChainTypeEOS:
-		return address, true, nil
-	case ChainTypeTron:
-		addr, err := tronAddress.Base58ToAddress(address)
-		if err != nil {
-			return "", false, errors.WithMessagef(err, "troner check address = %s", address)
-		}
-		return addr.String(), true, nil
-	}
-	return "", false, nil
 }
 
 func (*Chain) DataInit(db *gorm.DB) error {
