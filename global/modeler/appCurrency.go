@@ -20,23 +20,23 @@ type CurrencyExchangeRate struct {
 	Sort     int     `json:"sort" gorm:" default:9999;comment:排序"`
 }
 
-func (CurrencyExchangeRate) TableName() string {
+func (*CurrencyExchangeRate) TableName() string {
 	return "currency_exchange_rate"
 }
 
-func (CurrencyExchangeRate) Comment() string {
+func (*CurrencyExchangeRate) Comment() string {
 	return "法币汇率表"
 }
 func NewCurrencyExchangeRate() *CurrencyExchangeRate {
 	return &CurrencyExchangeRate{}
 }
 
-func (this *CurrencyExchangeRate) GetRecord(db *gorm.DB, column, value interface{}) bool {
+func (c *CurrencyExchangeRate) GetRecord(db *gorm.DB, column, value interface{}) bool {
 	if err := db.Where(fmt.Sprintf("%s = ?", gocast.ToString(column)), value).Debug().
-		Find(&this).Error; err != nil {
+		Find(&c).Error; err != nil {
 		return false
 	}
-	if this.Id != 0 {
+	if c.Id != 0 {
 		return true
 	}
 	return false

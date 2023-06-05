@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+// tips: 为前端准备的配置说明需要配置的内容 需要给前端用需要把结构体放入清单
 func confList() []ConfigInterface {
 	return []ConfigInterface{&ConfigApp{}}
 }
@@ -93,10 +94,14 @@ type Config struct {
 	Desc  string `json:"desc" gorm:"column:desc;comment:备注"`
 }
 
-func (Config) TableName() string {
+func (*Config) TableName() string {
 	return "config"
 }
 
-func (Config) Comment() string {
+func (*Config) Comment() string {
 	return "app总配置"
+}
+
+func NewConfig() *Config {
+	return &Config{}
 }

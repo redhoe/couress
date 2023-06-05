@@ -60,16 +60,12 @@ func (list ChainList) Default(db *gorm.DB) (ChainList, error) {
 		}
 
 		if err == gorm.ErrRecordNotFound {
-			chain.CreatedAt = time.Now()
-			chain.UpdatedAt = time.Now()
 			if err := db.Create(&chain).Error; err != nil {
 				return nil, err
 			}
 		}
-
 		list[i] = chain
 	}
-
 	return list, nil
 }
 
@@ -177,12 +173,32 @@ func NewChain() *Chain {
 	return &Chain{}
 }
 
-func (Chain) TableName() string {
+func (*Chain) TableName() string {
 	return "chain"
 }
 
-func (Chain) Comment() string {
+func (*Chain) Comment() string {
 	return "链信息"
+}
+
+func (c *Chain) CoinInfoByEthereum() *CoinInfo {
+	return &CoinInfo{
+		Name:    c.Name,
+		Symbol:  c.Symbol.String(),
+		Decimal: c.Config.Decimal,
+		Icon:    c.Icon,
+		Type:    CoinType(c.Alias),
+	}
+}
+
+func (c *Chain) TokenByContact(db *gorm.DB, contact string) (*Coin, error) {
+	coin := NewCoin()
+	if err := db.Model(&Coin{}).
+		Where("chain_id = ?", c.Id).
+		Where("address = ?", contact).Find(&coin).Error; err != nil {
+		return nil, err
+	}
+	return coin, nil
 }
 
 func (c *Chain) GetRecord(db *gorm.DB, column, value interface{}) bool {
@@ -252,11 +268,11 @@ type ChainNode struct {
 	LastNetBlockNumber     *int64     `json:"last_net_block_number" gorm:"comment:网络块高"`
 }
 
-func (ChainNode) TableName() string {
+func (*ChainNode) TableName() string {
 	return "chain_node"
 }
 
-func (ChainNode) Comment() string {
+func (*ChainNode) Comment() string {
 	return "各链当前区块高度记录"
 }
 

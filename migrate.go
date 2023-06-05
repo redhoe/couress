@@ -3,52 +3,53 @@ package couress
 import (
 	"fmt"
 	"github.com/redhoe/couress/global"
+	"github.com/redhoe/couress/global/core/loger"
 	"github.com/redhoe/couress/global/modeler"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
 func Migrate(args ...modeler.MigrateTable) {
-	CurrentDatabase := global.GbDB.Migrator().CurrentDatabase()
-	global.GbSLOG.Info(fmt.Sprintf("当前数据库[%s]", CurrentDatabase))
-	global.GbSLOG.Info("开始迁移InnoDB引擎表")
 	db := global.GbDB
-	slog := global.GbSLOG
+	slog := loger.NewLogger("migrate", "migrate").Sugar()
+	CurrentDatabase := db.Migrator().CurrentDatabase()
+	slog.Info(fmt.Sprintf("当前数据库[%s]", CurrentDatabase))
+	slog.Info("开始迁移InnoDB引擎表")
 	mTables := make([]modeler.MigrateTable, 0)
 	adminTables := []modeler.MigrateTable{
-		modeler.Administrator{},
-		modeler.AdministratorLog{},
-		modeler.Role{},
-		modeler.Permission{},
-		modeler.Config{},
-		modeler.Orders{}, // 测试用
+		modeler.NewAdministrator(),
+		modeler.NewAdministratorLog(),
+		modeler.NewRole(),
+		modeler.NewPermission(),
+		modeler.NewConfig(),
+		modeler.NewOrders(), // 测试用
 	}
 	baseTables := []modeler.MigrateTable{
-		modeler.Chain{},
-		modeler.ChainNode{},
-		modeler.Coin{},
-		modeler.CurrencyExchangeRate{},
-		modeler.DocumentTag{},
-		modeler.DocumentBanner{},
-		modeler.Document{},
-		modeler.IssueTag{},
-		modeler.Issue{},
-		modeler.IssueMessage{},
-		modeler.MarketCoin{},
-		modeler.Market{},
-		modeler.Poster{},
-		modeler.VersionDocument{},
-		modeler.Version{},
-		modeler.VersionGkeyModel{},
-		modeler.WalletCiphertext{},
-		modeler.WalletIdentity{},
-		modeler.WalletChain{},
-		modeler.WalletCoin{},
+		modeler.NewChain(),
+		modeler.NewChainNode(),
+		modeler.NewCoin(),
+		modeler.NewCurrencyExchangeRate(),
+		modeler.NewDocumentTag(),
+		modeler.NewDocumentBanner(),
+		modeler.NewDocument(),
+		modeler.NewIssueTag(),
+		modeler.NewIssue(),
+		modeler.NewIssueMessage(),
+		modeler.NewMarketCoin(),
+		modeler.NewMarket(),
+		modeler.NewPoster(),
+		modeler.NewVersionDocument(),
+		modeler.NewVersion(),
+		modeler.NewVersionGkeyModel(),
+		modeler.NewWalletCiphertext(),
+		modeler.NewWalletIdentity(),
+		modeler.NewWalletChain(),
+		modeler.NewWalletCoin(),
 	}
 	mTables = append(mTables, adminTables...)
 	mTables = append(mTables, baseTables...)
 	mTables = append(mTables, args...)
-	migrationTable(db, slog, mTables) //common
+	migrationTable(db, slog, mTables) //httpCommon
 	dataInit(db, slog)
 	slog.Info(fmt.Sprintf("数据库迁移完成"))
 }

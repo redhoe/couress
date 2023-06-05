@@ -11,7 +11,7 @@ import (
 type Administrator struct {
 	MysqlModel
 	Uuid          string     `json:"uuid" gorm:"type:varchar(100);index;comment:uuid;unique"`
-	NickName      string     `json:"nick_name" gorm:"column:nick_name;type:char(20);common:昵称"`
+	NickName      string     `json:"nick_name" gorm:"column:nick_name;type:char(20);httpCommon:昵称"`
 	UserName      string     `json:"user_name" gorm:"column:user_name;type:varchar(50);unique"`
 	Password      string     `json:"-" gorm:"column:password;type:varchar(100)"`
 	Salt          string     `json:"salt" gorm:"column:salt;varchar(50);"`
@@ -24,7 +24,7 @@ type Administrator struct {
 	GoogleKey     *string    `json:"-" gorm:"column:google_key;type:varchar(100)"`
 }
 
-func (Administrator) TableName() string {
+func (*Administrator) TableName() string {
 	return "administrator"
 }
 
@@ -32,7 +32,7 @@ func NewAdministrator() *Administrator {
 	return &Administrator{}
 }
 
-func (Administrator) Comment() string {
+func (*Administrator) Comment() string {
 	return "管理员"
 }
 
@@ -139,7 +139,7 @@ type AdministratorLog struct {
 	Extends   *string `json:"extends" gorm:"type:json"`
 }
 
-func (AdministratorLog) TableName() string {
+func (*AdministratorLog) TableName() string {
 	return "administrator_log"
 }
 
@@ -147,7 +147,7 @@ func NewAdministratorLog() *AdministratorLog {
 	return &AdministratorLog{}
 }
 
-func (AdministratorLog) Comment() string {
+func (*AdministratorLog) Comment() string {
 	return "管理员日志"
 }
 
@@ -158,7 +158,7 @@ type Role struct {
 	Desc  string `json:"desc" gorm:"column:desc;type:varchar(200);comment:角色权限描述;"`
 }
 
-func (Role) TableName() string {
+func (*Role) TableName() string {
 	return "administrator_role"
 }
 
@@ -166,16 +166,16 @@ func NewRole() *Role {
 	return &Role{}
 }
 
-func (Role) Comment() string {
+func (*Role) Comment() string {
 	return "角色表"
 }
 
-func (r *Role) GetById(db *gorm.DB, id interface{}) error {
-	err := db.Find(r, "id", id).Error
+func (a *Role) GetById(db *gorm.DB, id interface{}) error {
+	err := db.Find(a, "id", id).Error
 	if err != nil {
 		return err
 	}
-	if r.Id == 0 {
+	if a.Id == 0 {
 		return errors.New("IdNotExits")
 	}
 	return nil
@@ -222,7 +222,7 @@ type Permission struct {
 	Value    string `json:"value" gorm:"column:value;type:varchar(50);comment:扩展名"`
 }
 
-func (Permission) TableName() string {
+func (*Permission) TableName() string {
 	return "administrator_permission"
 }
 
@@ -230,7 +230,7 @@ func NewPermission() *Permission {
 	return &Permission{}
 }
 
-func (Permission) Comment() string {
+func (*Permission) Comment() string {
 	return "权限表"
 }
 

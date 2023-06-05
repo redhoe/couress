@@ -1,9 +1,6 @@
 package modeler
 
 import (
-	coingecko "github.com/superoo7/go-gecko/v3"
-	"gorm.io/gorm"
-	"net/http"
 	"time"
 )
 
@@ -14,47 +11,16 @@ type MarketCoin struct {
 	Name   string `json:"name" gorm:""`
 }
 
-func (MarketCoin) TableName() string {
+func (*MarketCoin) TableName() string {
 	return "market_coin"
 }
 
-func (MarketCoin) Comment() string {
+func (*MarketCoin) Comment() string {
 	return "市场所有币种"
 }
 
 func NewMarketCoin() *MarketCoin {
 	return &MarketCoin{}
-}
-
-func InitMarketCoinTable(db *gorm.DB) error {
-	httpClient := &http.Client{
-		Timeout: time.Second * 10,
-	}
-	client := coingecko.NewClient(httpClient)
-	coinList, err := client.CoinsList()
-	if err != nil {
-		return err
-	}
-	for _, item := range *coinList {
-		marketCoin := NewMarketCoin()
-		err := db.Model(&marketCoin).Where("api_id", item.ID).Find(&marketCoin).Error
-		if err != nil {
-			return err
-		}
-		if marketCoin.Id == 0 {
-			newMarketCoin := MarketCoin{
-				ApiId:  item.ID,
-				Symbol: item.Symbol,
-				Name:   item.Name,
-			}
-			err = db.Create(&newMarketCoin).Error
-			if err != nil {
-				return err
-			}
-		}
-	}
-
-	return nil
 }
 
 type Market struct {
@@ -87,10 +53,10 @@ func NewMarket() *Market {
 	return &Market{}
 }
 
-func (Market) TableName() string {
+func (*Market) TableName() string {
 	return "market"
 }
 
-func (Market) Comment() string {
+func (*Market) Comment() string {
 	return "当前市场币种行情"
 }

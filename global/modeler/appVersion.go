@@ -17,12 +17,16 @@ type Version struct {
 	Force   bool        `json:"force" gorm:"force"`
 }
 
-func (Version) TableName() string {
+func (*Version) TableName() string {
 	return "version"
 }
 
-func (Version) Comment() string {
+func (*Version) Comment() string {
 	return "版本信息"
+}
+
+func NewVersion() *Version {
+	return &Version{}
 }
 
 type VersionDocument struct {
@@ -34,10 +38,14 @@ type VersionDocument struct {
 	Show      bool   `json:"show" gorm:"show"`
 }
 
-func (VersionDocument) TableName() string {
+func (*VersionDocument) TableName() string {
 	return "version_document"
 }
 
-func (VersionDocument) Comment() string {
+func (*VersionDocument) Comment() string {
 	return "版本信息文档"
+}
+
+func NewVersionDocument() *VersionDocument {
+	return &VersionDocument{}
 }

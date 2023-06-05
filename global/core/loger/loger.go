@@ -1,6 +1,7 @@
 package loger
 
 import (
+	"fmt"
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/redhoe/couress/global"
 	"go.uber.org/zap"
@@ -135,14 +136,56 @@ func NewSugaredLogger(tag LogTagName) *zap.SugaredLogger {
 	return errorSugaredLoggerMap[tag]
 }
 
-func NewLogger(tag LogTagName) *zap.Logger {
-	return errorLoggerMap[tag]
+func NewLogger(tag LogTagName, args ...interface{}) *zap.Logger {
+	if errorLoggerMap[tag] != nil {
+		return errorLoggerMap[tag]
+	}
+	return newLogger(tag, args...)
+}
+
+func newLogger(tag LogTagName, args ...interface{}) *zap.Logger {
+	savePath := "./logs/"
+	if len(args) > 0 {
+		savePath = fmt.Sprintf("./%s/", args[0])
+	}
+	tagConf := logConfTags{Tag: tag, FileName: fmt.Sprintf("%s.log", tag), ErrFileName: fmt.Sprintf("%s_err.log", tag)}
+
+	encoder := getEncoder()
+	infoLevel := zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
+		return lvl >= global.GbCONFIG.Zap.TransportLevel()
+	})
+	errorLevel := zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
+		return lvl >= zapcore.ErrorLevel
+	})
+	// 获取 info、error日志文件的io.Writer 抽象 getWriter() 在下方实现
+	infoWriter := getWriter(savePath + tagConf.FileName)
+	errorWriter := getWriter(savePath + tagConf.ErrFileName)
+	cores := make([]zapcore.Core, 0)
+	cores = append(cores, zapcore.NewCore(encoder, zapcore.AddSync(infoWriter), infoLevel))
+	cores = append(cores, zapcore.NewCore(encoder, zapcore.AddSync(errorWriter), errorLevel))
+	if global.GbCONFIG.Zap.LogInConsole {
+		cores = append(cores, zapcore.NewCore(encoder, zapcore.AddSync(os.Stdout), infoLevel))
+	}
+	// 最后创建具体的Logger
+	core := zapcore.NewTee(cores...)
+	// 开启开发模式，堆栈跟踪
+	caller := zap.AddCaller()
+	development := zap.Development()
+	filed := zap.Fields(zap.String("Tag", string(tagConf.Tag)))
+	stackTrace := zap.AddStacktrace(zap.ErrorLevel) // 当错误等级error时 触发堆栈跟踪
+	log := zap.New(core, caller, stackTrace, development, filed)
+	// 是否显示行
+	if global.GbCONFIG.Zap.ShowLine {
+		log = log.WithOptions(zap.AddCaller())
+	}
+	errorLoggerMap[tagConf.Tag] = log                // 日志糖
+	errorSugaredLoggerMap[tagConf.Tag] = log.Sugar() // 日志糖
+	return errorLoggerMap[tagConf.Tag]
 }
 
 func Debug(args ...interface{}) {
 	errorSugaredLogger.Debug(args...)
 }
-
 func Debugf(template string, args ...interface{}) {
 	errorSugaredLogger.Debugf(template, args...)
 }

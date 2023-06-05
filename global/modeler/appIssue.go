@@ -8,12 +8,16 @@ type IssueTag struct {
 	Sort int64  `json:"sort" gorm:"default:9999"`
 }
 
-func (IssueTag) TableName() string {
+func (*IssueTag) TableName() string {
 	return "issue_tag"
 }
 
-func (IssueTag) Comment() string {
+func (*IssueTag) Comment() string {
 	return "反馈信息标签"
+}
+
+func NewIssueTag() *IssueTag {
+	return &IssueTag{}
 }
 
 type Issue struct {
@@ -36,6 +40,9 @@ func (Issue) TableName() string {
 func (Issue) Comment() string {
 	return "反馈信息"
 }
+func NewIssue() *Issue {
+	return &Issue{}
+}
 
 type IssueMessage struct {
 	MysqlModel
@@ -51,4 +58,7 @@ func (IssueMessage) TableName() string {
 
 func (IssueMessage) Comment() string {
 	return "反馈回复信息"
+}
+func NewIssueMessage() *IssueMessage {
+	return &IssueMessage{}
 }

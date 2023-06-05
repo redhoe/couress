@@ -11,12 +11,16 @@ type DocumentTag struct {
 	Sort     int64  `json:"sort" gorm:"default:9999"`
 }
 
-func (DocumentTag) TableName() string {
+func (*DocumentTag) TableName() string {
 	return "document_tag"
 }
 
-func (DocumentTag) Comment() string {
+func (*DocumentTag) Comment() string {
 	return "文档标签"
+}
+
+func NewDocumentTag() *DocumentTag {
+	return &DocumentTag{}
 }
 
 type DocumentBanner struct {
@@ -30,12 +34,16 @@ type DocumentBanner struct {
 	DocumentId int64  `json:"document_id" gorm:""`
 }
 
-func (DocumentBanner) TableName() string {
+func (*DocumentBanner) TableName() string {
 	return "document_banner"
 }
 
-func (DocumentBanner) Comment() string {
+func (*DocumentBanner) Comment() string {
 	return "轮播图"
+}
+
+func NewDocumentBanner() *DocumentBanner {
+	return &DocumentBanner{}
 }
 
 type Document struct {
@@ -51,10 +59,14 @@ type Document struct {
 	Hot     bool         `json:"hot" gorm:""`
 }
 
-func (Document) TableName() string {
+func (*Document) TableName() string {
 	return "document"
 }
 
-func (Document) Comment() string {
+func (*Document) Comment() string {
 	return "文档"
+}
+
+func NewDocument() *Document {
+	return &Document{}
 }

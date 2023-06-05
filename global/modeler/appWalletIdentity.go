@@ -6,15 +6,19 @@ import (
 
 type WalletIdentity struct {
 	MysqlModel
-	Identity string `json:"identity" gorm:"unique;common:身份ID"`
+	Identity string `json:"identity" gorm:"unique;httpCommon:身份ID"`
 }
 
-func (WalletIdentity) TableName() string {
+func (*WalletIdentity) TableName() string {
 	return "wallet_identity"
 }
 
-func (WalletIdentity) Comment() string {
+func (*WalletIdentity) Comment() string {
 	return "身份钱包Id"
+}
+
+func NewWalletIdentity() *WalletIdentity {
+	return &WalletIdentity{}
 }
 
 func GetWalletIdentity(db *gorm.DB, identity string) (*WalletIdentity, error) {

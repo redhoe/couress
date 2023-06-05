@@ -9,10 +9,14 @@ type Poster struct {
 	Sort  int    `json:"sort" gorm:"type:int(4);default:9999"` // 排序，由小到大
 }
 
-func (Poster) TableName() string {
+func (*Poster) TableName() string {
 	return "poster"
 }
 
-func (Poster) Comment() string {
+func (*Poster) Comment() string {
 	return "海报"
+}
+
+func NewPoster() *Poster {
+	return &Poster{}
 }

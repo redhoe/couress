@@ -40,11 +40,11 @@ type Coin struct {
 	UsdRate     *decimal.Decimal `json:"-" gorm:"comment:汇率"`
 }
 
-func (Coin) TableName() string {
+func (*Coin) TableName() string {
 	return "coin"
 }
 
-func (Coin) Comment() string {
+func (*Coin) Comment() string {
 	return "币信息"
 }
 
@@ -89,19 +89,21 @@ func (c *Coin) CoinInfo() *CoinInfo {
 		Website: c.Website,
 		Address: c.Address,
 		Type:    c.Type,
+		UsdRate: c.UsdRate,
 	}
 }
 
 type CoinList []Coin
 
 type CoinInfo struct {
-	Name    string   `json:"name"`
-	Symbol  string   `json:"symbol"`
-	Decimal int32    `json:"decimal"`
-	Icon    string   `json:"icon"`
-	Website string   `json:"website"`
-	Address string   `json:"address"`
-	Type    CoinType `json:"type"`
+	Name    string           `json:"name"`
+	Symbol  string           `json:"symbol"`
+	Decimal int32            `json:"decimal"`
+	Icon    string           `json:"icon"`
+	Website string           `json:"website"`
+	Address string           `json:"address"`
+	Type    CoinType         `json:"type"`
+	UsdRate *decimal.Decimal `json:"usdRate"`
 }
 
 func (list CoinList) ToInfo() []CoinInfo {

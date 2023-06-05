@@ -8,8 +8,14 @@ import (
 	"gorm.io/gorm"
 )
 
-const CoinShowDecimal int32 = 8
-const CurrencyShowDecimal int32 = 4
+const (
+	EthCoinBalanceDecimal int32 = 8 // 数字货币保留显示小数位
+	BtcCoinShowDecimal    int32 = 10
+	TronCoinShowDecimal   int32 = 4
+
+	CurrencyShowDecimal int32 = 2 // 转化为法币价值保留小数位
+	PriceDecimal              = 4 // 货币单价转化为法币价值保留小数位
+)
 
 type WalletType string
 
@@ -27,7 +33,7 @@ var WalletTypeList = []WalletType{
 
 type WalletChain struct {
 	MysqlModel
-	ChainId          uint            `json:"chain_id" gorm:"comment:创建时间"`
+	ChainId          uint            `json:"chain_id" gorm:"comment:链Id"`
 	IdentityId       uint            `json:"identity_id" gorm:"comment:身份ID"`
 	Identity         string          `json:"identity" gorm:"type:varchar(50);comment:身份ID"`
 	ChainType        ChainType       `json:"chain_type" gorm:"type:varchar(20);comment:链类型"`
@@ -38,12 +44,12 @@ type WalletChain struct {
 	Balance          decimal.Decimal `json:"balance" gorm:"type:decimal(50,18);comment:余额"`
 }
 
-func (WalletChain) TableName() string {
+func (*WalletChain) TableName() string {
 	return "wallet_chain"
 }
 
-func (WalletChain) Comment() string {
-	return "钱包链信息"
+func (*WalletChain) Comment() string {
+	return "用户钱包链信息"
 }
 
 func NewWalletChain() *WalletChain {
@@ -111,59 +117,59 @@ type WalletCoin struct {
 	Balance       decimal.Decimal `json:"balance" gorm:"type:decimal(50,18);comment:可用余额"`
 }
 
-func (WalletCoin) TableName() string {
+func (*WalletCoin) TableName() string {
 	return "wallet_coin"
 }
 
-func (WalletCoin) Comment() string {
-	return "钱包币种信息"
+func (*WalletCoin) Comment() string {
+	return "用户钱包币种信息"
 }
 
 func NewWalletCoin() *WalletCoin {
 	return &WalletCoin{}
 }
 
-func (this *WalletCoin) UpdateTokenBalance(db *gorm.DB, token string) error {
+func (c *WalletCoin) UpdateTokenBalance(db *gorm.DB, token string) error {
 	coin := NewCoin()
 	if !coin.GetRecord(db, "address", token) {
 		return errors.New("coin info error")
 	}
-	this.Symbol = coin.Symbol
-	this.CoinId = coin.Id
-	if err := this.GetOrCreate(db); err != nil {
+	c.Symbol = coin.Symbol
+	c.CoinId = coin.Id
+	if err := c.GetOrCreate(db); err != nil {
 		return err
 	}
-	this.Decimal = coin.Decimal
+	c.Decimal = coin.Decimal
 	if err := db.Model(&WalletCoin{}).
-		Where(fmt.Sprintf("%s = ?", gocast.ToString("wallet_chain_id")), this.WalletChainId).
+		Where(fmt.Sprintf("%s = ?", gocast.ToString("wallet_chain_id")), c.WalletChainId).
 		Where(fmt.Sprintf("%s = ?", gocast.ToString("coin_id")), coin.Id).
-		Where(fmt.Sprintf("%s = ?", gocast.ToString("address")), this.Address).Debug().
+		Where(fmt.Sprintf("%s = ?", gocast.ToString("address")), c.Address).Debug().
 		Updates(map[string]interface{}{
-			"balance":   this.Balance,
-			"`decimal`": this.Decimal,
+			"balance":   c.Balance,
+			"`decimal`": c.Decimal,
 		}).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-func (this *WalletCoin) GetOrCreate(db *gorm.DB) error {
+func (c *WalletCoin) GetOrCreate(db *gorm.DB) error {
 	if err := db.
-		Where(fmt.Sprintf("%s = ?", gocast.ToString("identity_id")), this.IdentityId).
-		Where(fmt.Sprintf("%s = ?", gocast.ToString("symbol")), this.Symbol).
-		Where(fmt.Sprintf("%s = ?", gocast.ToString("coin_id")), this.CoinId).
-		Where(fmt.Sprintf("%s = ?", gocast.ToString("wallet_chain_id")), this.WalletChainId).
-		Where(fmt.Sprintf("%s = ?", gocast.ToString("address")), this.Address).Debug().
-		First(&this).Error; err != nil {
+		Where(fmt.Sprintf("%s = ?", gocast.ToString("identity_id")), c.IdentityId).
+		Where(fmt.Sprintf("%s = ?", gocast.ToString("symbol")), c.Symbol).
+		Where(fmt.Sprintf("%s = ?", gocast.ToString("coin_id")), c.CoinId).
+		Where(fmt.Sprintf("%s = ?", gocast.ToString("wallet_chain_id")), c.WalletChainId).
+		Where(fmt.Sprintf("%s = ?", gocast.ToString("address")), c.Address).Debug().
+		First(&c).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return db.Create(&this).Error
+			return db.Create(&c).Error
 		}
 		return errors.New("SystemError")
 	}
-	if this.Id != 0 {
+	if c.Id != 0 {
 		return nil
 	} else {
-		return db.Create(&this).Error
+		return db.Create(&c).Error
 	}
 }
 

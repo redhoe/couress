@@ -9,11 +9,6 @@ import (
 	"time"
 )
 
-const (
-	EthCoinBalanceDecimal int32 = 8
-	PriceDecimal                = 2
-)
-
 // 分页器
 
 type Paging struct {

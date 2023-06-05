@@ -15,11 +15,11 @@ type Orders struct {
 	Nums   int64           `json:"-" gorm:"column:nums;type:int;comment:nums改字段不准修改"`
 }
 
-func (Orders) TableName() string {
+func (*Orders) TableName() string {
 	return "app_orders"
 }
 
-func (Orders) Comment() string {
+func (*Orders) Comment() string {
 	return "订单表"
 }
 
