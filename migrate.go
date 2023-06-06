@@ -87,7 +87,7 @@ func dataAdiInit(db *gorm.DB, slog *zap.SugaredLogger) {
 }
 
 func dataOtherInit(db *gorm.DB, slog *zap.SugaredLogger) {
-	if err := modeler.NewChain().DataInit(db); err != nil {
-		slog.Error("error:", err.Error())
-	}
+	//if err := modeler.NewChain().DataInit(db); err != nil {
+	//	slog.Error("error:", err.Error())
+	//}
 }

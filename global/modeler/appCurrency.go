@@ -82,10 +82,8 @@ type CurrencyInfo struct {
 }
 
 func CurrencyBySymbol(db *gorm.DB, currencySymbol string) (*CurrencyExchangeRate, error) {
-	currencyExchangeRate := &CurrencyExchangeRate{
-		Symbol: currencySymbol,
-	}
-	if err := db.Model(&CurrencyExchangeRate{}).Find(&currencyExchangeRate).Error; err != nil {
+	currencyExchangeRate := NewCurrencyExchangeRate()
+	if err := db.Model(&CurrencyExchangeRate{}).Where("Symbol", currencySymbol).Find(&currencyExchangeRate).Error; err != nil {
 		return nil, err
 	}
 	return currencyExchangeRate, nil
