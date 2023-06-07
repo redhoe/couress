@@ -26,17 +26,17 @@ const (
 type Coin struct {
 	MysqlModel
 	Name        string           `json:"name" gorm:"type:varchar(200);comment:全称"`
-	ChainId     uint             `json:"chain_id" gorm:";comment:全称"`
+	ChainId     uint             `json:"chain_id" gorm:"comment:全称"`
 	Chain       *Chain           `json:"chain" gorm:"foreignKey:chain_id;references:id;"`
-	Symbol      string           `json:"symbol" bun:"comment:币名称"`
+	Symbol      string           `json:"symbol" bun:"type:varchar(255);comment:币名称"`
 	Decimal     int32            `json:"decimal" gorm:"comment:精度"`
-	Icon        string           `json:"icon" gorm:"comment:图标"`
-	Website     string           `json:"website" gorm:"comment:官网"`
+	Icon        string           `json:"icon" gorm:"type:varchar(255);comment:图标"`
+	Website     string           `json:"website" gorm:"type:varchar(255);comment:官网"`
 	Type        CoinType         `json:"type" gorm:"comment:币类型"`
-	Address     string           `json:"address" gorm:"comment:合约地址"`
+	Address     string           `json:"address" gorm:"type:varchar(100);comment:合约地址"`
 	Sort        int              `json:"sort" gorm:"default:9999;comment:排序"`
 	Hot         bool             `json:"hot" gorm:"comment:是否热门"`
-	MarketApiId *string          `json:"-" gorm:"comment:市场id"`
+	MarketApiId *string          `json:"-" gorm:"type:varchar(100);comment:市场id"`
 	UsdRate     *decimal.Decimal `json:"-" gorm:"default:0;comment:汇率"`
 }
 

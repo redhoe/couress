@@ -165,7 +165,7 @@ type Chain struct {
 	Testnet     bool             `json:"testnet" gorm:"comment:是否测试网络"`
 	Config      *ChainConfig     `json:"config" gorm:"type:json;comment:配置"`
 	SwapConfig  *ChainSwapConfig `json:"swap_config" gorm:"type:json"`
-	MarketApiId *string          `json:"marketApiId" gorm:"type:varchar(80);comment:配置匹配的apiId"`
+	MarketApiId *string          `json:"marketApiId" gorm:"type:varchar(100);comment:配置匹配的apiId"`
 	UsdRate     decimal.Decimal  `json:"usdRate" gorm:"default:0;type:decimal(38,18);comment:USD汇率"`
 }
 

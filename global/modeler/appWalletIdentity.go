@@ -6,7 +6,7 @@ import (
 
 type WalletIdentity struct {
 	MysqlModel
-	Identity string `json:"identity" gorm:"unique;httpCommon:身份ID"`
+	Identity string `json:"identity" gorm:"unique;comment:身份ID"`
 }
 
 func (*WalletIdentity) TableName() string {

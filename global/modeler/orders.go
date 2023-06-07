@@ -15,34 +15,16 @@ type Orders struct {
 	Nums   int64           `json:"-" gorm:"column:nums;type:int;comment:nums改字段不准修改"`
 }
 
+func NewOrders() *Orders {
+	return &Orders{}
+}
+
 func (*Orders) TableName() string {
 	return "app_orders"
 }
 
 func (*Orders) Comment() string {
 	return "订单表"
-}
-
-func (o *Orders) GetNoEdit() string {
-	return o.NoEdit
-}
-
-func (o *Orders) SetNoEdit(str string) {
-	o.NoEdit = str
-	return
-}
-
-func (o *Orders) GetNums() int64 {
-	return o.Nums
-}
-
-func (o *Orders) SetNums(num int64) {
-	o.Nums = num
-	return
-}
-
-func NewOrders() *Orders {
-	return &Orders{}
 }
 
 func (*Orders) KeyMap() map[string]string {
