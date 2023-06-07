@@ -12,10 +12,10 @@ var DefaultCurrency = "USD"
 
 type CurrencyExchangeRate struct {
 	MysqlModel
-	Uint     *string `json:"uint" gorm:"column:unit;comment:单位符号"`
-	Symbol   string  `json:"symbol" gorm:"comment:币种名"`
+	Uint     *string `json:"uint" gorm:"column:unit;type:VARCHAR(4);comment:单位符号"`
+	Symbol   string  `json:"symbol" gorm:"comment:币种名;type:VARCHAR(20)"`
 	Rate     float64 `json:"rate" gorm:"comment:汇率"`
-	BaseCode string  `json:"base_code" gorm:"comment:基础币种"`
+	BaseCode string  `json:"base_code" gorm:"comment:基础币种;type:VARCHAR(20)"`
 	Enable   bool    `json:"enable"  gorm:"comment:是否有效"`
 	Sort     int     `json:"sort" gorm:" default:9999;comment:排序"`
 }

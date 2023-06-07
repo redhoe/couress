@@ -166,7 +166,7 @@ type Chain struct {
 	Config      *ChainConfig     `json:"config" gorm:"type:json;comment:配置"`
 	SwapConfig  *ChainSwapConfig `json:"swap_config" gorm:"type:json"`
 	MarketApiId *string          `json:"marketApiId" gorm:"type:varchar(80);comment:配置匹配的apiId"`
-	UsdRate     decimal.Decimal  `json:"usdRate" gorm:"type:decimal(38,18);comment:USD汇率"`
+	UsdRate     decimal.Decimal  `json:"usdRate" gorm:"default:0;type:decimal(38,18);comment:USD汇率"`
 }
 
 func NewChain() *Chain {

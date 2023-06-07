@@ -77,7 +77,7 @@ func initConfig[T ConfigInterface](v T, db *gorm.DB) (*ConfigEngine[T], error) {
 // GetConfig 从数据中获取配置
 func GetConfig[T ConfigInterface](t T, db *gorm.DB) (*ConfigEngine[T], error) {
 	config := &Config{}
-	if err := db.Model(config).Debug().Where("`key` = ?", t.Key()).Find(config).Error; err != nil {
+	if err := db.Model(config).Where("`key` = ?", t.Key()).Find(config).Error; err != nil {
 		return nil, errors.WithMessagef(err, "查询key = %s, 配置失败", t.Key())
 	}
 	if config.Key == "" {
@@ -86,7 +86,7 @@ func GetConfig[T ConfigInterface](t T, db *gorm.DB) (*ConfigEngine[T], error) {
 	if err := t.FromString(config.Value); err != nil {
 		return nil, errors.WithMessagef(err, "解析key=%s config失败", t.Key())
 	}
-	fmt.Println(fmt.Sprintf("%+v----config:%+v", t, config))
+	//fmt.Println(fmt.Sprintf("%+v----config:%+v", t, config))
 	engine := &ConfigEngine[T]{value: t, config: config}
 	return engine, nil
 }

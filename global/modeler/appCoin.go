@@ -37,7 +37,7 @@ type Coin struct {
 	Sort        int              `json:"sort" gorm:"default:9999;comment:排序"`
 	Hot         bool             `json:"hot" gorm:"comment:是否热门"`
 	MarketApiId *string          `json:"-" gorm:"comment:市场id"`
-	UsdRate     *decimal.Decimal `json:"-" gorm:"comment:汇率"`
+	UsdRate     *decimal.Decimal `json:"-" gorm:"default:0;comment:汇率"`
 }
 
 func (*Coin) TableName() string {
