@@ -44,6 +44,12 @@ type WalletChain struct {
 	Balance          decimal.Decimal `json:"balance" gorm:"type:decimal(50,18);comment:余额"`
 }
 
+type T struct {
+	CreatedAtOmitempty string `json:"created_at,omitempty"`
+	IdOmitempty        string `json:"id,omitempty"`
+	UpdatedAtOmitempty string `json:"updated_at,omitempty"`
+}
+
 func (*WalletChain) TableName() string {
 	return "wallet_chain"
 }

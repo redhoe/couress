@@ -28,5 +28,5 @@ func (*Orders) Comment() string {
 }
 
 func (*Orders) KeyMap() map[string]string {
-	return reflectSignStruct(Orders{})
+	return reflectModelToMap(Orders{})
 }

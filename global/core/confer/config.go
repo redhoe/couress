@@ -23,7 +23,7 @@ func DefaultConfInit(v *viper.Viper) {
 		SigningKey:  "signingKey",
 		ExpiresTime: "100h",
 		BufferTime:  "3s",
-		Issuer:      "",
+		Issuer:      "hoer",
 	})
 	v.SetDefault("system", System{
 		Env:           "dev",
@@ -57,16 +57,18 @@ func DefaultConfInit(v *viper.Viper) {
 		Name:   "wallet_app_new",
 	})
 	v.SetDefault("local", Local{
-		Path:      "http://127.0.0.1:1113/static/uploads/",
-		StorePath: "./static/uploads/",
+		Path:      "http://127.0.0.1:1113",
+		StorePath: "static/uploads",
+		MaxSize:   10,
+		Types:     "jpg,png,jpeg,csv",
 	})
 	v.SetDefault("oss", Oss{
 		Endpoint:        "oss",
 		AccessKeyId:     "access-key-id",
-		AccessKeySecret: "",
-		BucketName:      "",
-		BucketUrl:       "",
-		BasePath:        "",
+		AccessKeySecret: "access-key-secret",
+		BucketName:      "bucket name",
+		BucketUrl:       "url",
+		BasePath:        "bucket01",
 	})
 	v.SetDefault("zap", Zap{
 		Level:         "info",

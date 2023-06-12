@@ -3,10 +3,15 @@ package simple
 import (
 	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
+	"strings"
 )
 
 func NewUuid() string {
 	return uuid.NewV4().String()
+}
+
+func NewFileName(fileType string) string {
+	return strings.ReplaceAll(uuid.NewV4().String(), "-", "") + "." + fileType
 }
 
 func StringFormatUuid(str string) uuid.UUID {

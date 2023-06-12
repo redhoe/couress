@@ -56,25 +56,28 @@ func (a *MysqlModel) CheckRowIsExist(db *gorm.DB, column, value interface{}) boo
 }
 
 // 获取模型中字段与描述信息
-func reflectSignStruct(i any) map[string]string {
-	modelType := reflect.TypeOf(i)
+func reflectModelToMap(s any) map[string]string {
+	modelType := reflect.TypeOf(s)
+	if modelType.Kind() == reflect.Ptr {
+		modelType = modelType.Elem()
+	}
 	ky := map[string]string{}
 	for i := 0; i < modelType.NumField(); i++ {
 		field := modelType.Field(i)
 		if field.Name == "MysqlModel" {
-			ky1 := reflectSignStruct(MysqlIdModel{})
+			ky1 := reflectModelToMap(MysqlIdModel{})
 			ky = mapAdd(ky, ky1)
-			ky2 := reflectSignStruct(MysqlTimeModel{})
+			ky2 := reflectModelToMap(MysqlTimeModel{})
 			ky = mapAdd(ky, ky2)
 			continue
 		}
 		if field.Name == "MysqlIdModel" {
-			ky1 := reflectSignStruct(MysqlIdModel{})
+			ky1 := reflectModelToMap(MysqlIdModel{})
 			ky = mapAdd(ky, ky1)
 			continue
 		}
 		if field.Name == "MysqlTimeModel" {
-			ky1 := reflectSignStruct(MysqlTimeModel{})
+			ky1 := reflectModelToMap(MysqlTimeModel{})
 			ky = mapAdd(ky, ky1)
 			continue
 		}
@@ -89,7 +92,7 @@ func reflectSignStruct(i any) map[string]string {
 		for _, tag := range gormTags {
 			tag_ := strings.Split(tag, ":")
 			if len(tag_) == 2 && strings.ToLower(tag_[0]) == "comment" {
-				ky[fieldJson] = tag_[1]
+				ky[fieldJsons[0]] = tag_[1]
 			}
 		}
 	}
