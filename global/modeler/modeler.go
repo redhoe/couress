@@ -81,6 +81,9 @@ func reflectModelToMap(s any) map[string]string {
 			ky = mapAdd(ky, ky1)
 			continue
 		}
+		if field.Name == "MysqlDeleteModel" {
+			continue
+		}
 		fieldJson := field.Tag.Get("json")
 		if fieldJson == "-" {
 			continue

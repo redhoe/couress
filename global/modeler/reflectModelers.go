@@ -4,6 +4,10 @@ import "strings"
 
 func reflectModelList() []MigrateTable {
 	return []MigrateTable{
+		// 管理表
+		NewAdministrator(),
+		NewAdministratorLog(),
+		
 		// app公共
 		NewCoin(),
 		NewChain(),

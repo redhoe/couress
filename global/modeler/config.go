@@ -9,7 +9,7 @@ import (
 
 // tips: 为前端准备的配置说明需要配置的内容 需要给前端用需要把结构体放入清单
 func confList() []ConfigInterface {
-	return []ConfigInterface{&ConfigApp{}}
+	return []ConfigInterface{NewConfigApp(), NewConfTest()}
 }
 
 func ConfKeys() []string {
@@ -24,7 +24,7 @@ func ConfMaps() []map[string]any {
 	list := make([]map[string]any, 0)
 	for _, confObj := range confList() {
 		list = append(list, map[string]any{
-			confObj.Key(): confObj,
+			confObj.Key(): reflectModelToMap(confObj),
 		})
 	}
 	return list
@@ -40,10 +40,14 @@ func GetConfigInterface(str string) ConfigInterface {
 }
 
 type ConfTest struct {
-	IsTestConf string          `json:"isTestConf"`
-	IsBool     bool            `json:"isBool"`
-	IsNumber   float64         `json:"isNumber"`
-	IsDecimal  decimal.Decimal `json:"isDecimal"`
+	IsTestConf string          `json:"isTestConf" gorm:"comment:string类型测试配置"`
+	IsBool     bool            `json:"isBool" gorm:"comment:bool类型"`
+	IsNumber   float64         `json:"isNumber" gorm:"comment:number类型"`
+	IsDecimal  decimal.Decimal `json:"isDecimal" gorm:"comment:decimal类型"`
+}
+
+func NewConfTest() *ConfTest {
+	return &ConfTest{}
 }
 
 func (c *ConfTest) String() string {
@@ -60,30 +64,6 @@ func (c *ConfTest) Key() string {
 }
 
 func (c *ConfTest) FromString(str string) error {
-	return json.Unmarshal([]byte(str), &c)
-}
-
-type AppBaseConf struct {
-	AppName          string `json:"appName"`
-	AppApiBaseUrl    string `json:"appApiBaseUrl"`
-	AppGetAddressUrl string `json:"appGetAddressUrl"`
-	AppWithdrawUrl   string `json:"appWithdrawUrl"`
-}
-
-func (c *AppBaseConf) String() string {
-	b, _ := json.Marshal(c)
-	return string(b)
-}
-
-func (c *AppBaseConf) Desc() string {
-	return fmt.Sprintf("基础配置")
-}
-
-func (c *AppBaseConf) Key() string {
-	return fmt.Sprintf("AppBaseConf")
-}
-
-func (c *AppBaseConf) FromString(str string) error {
 	return json.Unmarshal([]byte(str), &c)
 }
 

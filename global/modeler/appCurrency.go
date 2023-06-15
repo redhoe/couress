@@ -12,7 +12,7 @@ var DefaultCurrency = "USD"
 
 type CurrencyExchangeRate struct {
 	MysqlModel
-	Uint     *string `json:"uint" gorm:"column:unit;type:VARCHAR(4);comment:单位符号"`
+	Unit     *string `json:"unit" gorm:"column:unit;type:VARCHAR(4);comment:单位符号"`
 	Symbol   string  `json:"symbol" gorm:"comment:币种名;type:VARCHAR(20)"`
 	Rate     float64 `json:"rate" gorm:"comment:汇率"`
 	BaseCode string  `json:"base_code" gorm:"comment:基础币种;type:VARCHAR(20)"`
@@ -50,7 +50,7 @@ func (c *CurrencyExchangeRate) ExchangePrice(usdPrice decimal.Decimal) decimal.D
 // Exchange 把对应USD价值 转化为 指定币种价值
 func (c *CurrencyExchangeRate) Exchange(usdAmount decimal.Decimal) CurrencyInfo {
 	info := CurrencyInfo{
-		Uint:   c.Uint,
+		Uint:   c.Unit,
 		Symbol: c.Symbol,
 		Value:  usdAmount.Mul(decimal.NewFromFloat(c.Rate)).RoundFloor(CurrencyShowDecimal),
 	}
@@ -59,7 +59,7 @@ func (c *CurrencyExchangeRate) Exchange(usdAmount decimal.Decimal) CurrencyInfo 
 
 func (c *CurrencyExchangeRate) CurrencyInfo(usdAmount decimal.Decimal) CurrencyInfo {
 	info := CurrencyInfo{
-		Uint:   c.Uint,
+		Uint:   c.Unit,
 		Symbol: c.Symbol,
 		Value:  usdAmount.Mul(decimal.NewFromFloat(c.Rate)).RoundFloor(2),
 	}
@@ -68,7 +68,7 @@ func (c *CurrencyExchangeRate) CurrencyInfo(usdAmount decimal.Decimal) CurrencyI
 
 func (c *CurrencyExchangeRate) ToInfoFromUsd2(usdAmount decimal.Decimal) CurrencyInfo {
 	info := CurrencyInfo{
-		Uint:   c.Uint,
+		Uint:   c.Unit,
 		Symbol: c.Symbol,
 		Value:  usdAmount.Mul(decimal.NewFromFloat(c.Rate)),
 	}

@@ -47,9 +47,9 @@ func NewIssue() *Issue {
 type IssueMessage struct {
 	MysqlModel
 	MysqlDeleteModel
-	IssueId uint   `json:"issue_id" gorm:""`
-	Message string `json:"message" gorm:""`
-	AdminId *uint  `json:"admin_id" gorm:""`
+	IssueId uint   `json:"issue_id" gorm:"comment:反馈问题ID"`
+	Message string `json:"message" gorm:"comment:回复内容"`
+	AdminId *uint  `json:"admin_id" gorm:"comment:客服Id"`
 }
 
 func (IssueMessage) TableName() string {

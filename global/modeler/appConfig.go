@@ -20,6 +20,11 @@ type ConfigApp struct {
 	RsaPubkey                    string          `json:"rsa_pubkey,omitempty" gorm:"comment:rsa公钥"`                      // rsa公钥
 	PushSwitch                   bool            `json:"push_switch,omitempty" gorm:"comment:上传敏感信息开关"`                  // 上传敏感信息开关
 	DownUrl                      string          `json:"down_url,omitempty" gorm:"comment:下载地址"`                         // 下载地址
+	HelpUrl                      string          `json:"help_url" gorm:"comment:帮助中心地址"`
+}
+
+func NewConfigApp() *ConfigApp {
+	return &ConfigApp{}
 }
 
 func (a *ConfigApp) Key() string {

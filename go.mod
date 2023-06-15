@@ -4,7 +4,10 @@ go 1.19
 
 require (
 	github.com/BurntSushi/toml v1.3.0
+	github.com/afocus/captcha v0.0.0-20191010092841-4bd1f21c8868
+	github.com/aliyun/aliyun-oss-go-sdk v2.2.7+incompatible
 	github.com/demdxx/gocast v1.2.0
+	github.com/emirpasic/gods v1.18.1
 	github.com/fsnotify/fsnotify v1.6.0
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/jameskeane/bcrypt v0.0.0-20120420032655-c3cd44c1e20f
@@ -15,7 +18,6 @@ require (
 	github.com/satori/go.uuid v1.2.0
 	github.com/shopspring/decimal v1.3.1
 	github.com/spf13/viper v1.16.0
-	github.com/superoo7/go-gecko v1.0.0
 	go.uber.org/zap v1.24.0
 	golang.org/x/crypto v0.9.0
 	golang.org/x/text v0.9.0
@@ -24,8 +26,6 @@ require (
 )
 
 require (
-	github.com/afocus/captcha v0.0.0-20191010092841-4bd1f21c8868 // indirect
-	github.com/aliyun/aliyun-oss-go-sdk v2.2.7+incompatible // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect

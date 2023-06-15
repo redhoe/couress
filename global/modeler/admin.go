@@ -10,18 +10,18 @@ import (
 
 type Administrator struct {
 	MysqlModel
-	Uuid          string     `json:"uuid" gorm:"type:varchar(100);index;comment:uuid;unique"`
-	NickName      string     `json:"nick_name" gorm:"column:nick_name;type:char(20);httpCommon:昵称"`
-	UserName      string     `json:"user_name" gorm:"column:user_name;type:varchar(50);unique"`
-	Password      string     `json:"-" gorm:"column:password;type:varchar(100)"`
-	Salt          string     `json:"salt" gorm:"column:salt;varchar(50);"`
-	RoleId        uint       `json:"role_id" gorm:"column:role_id"`
+	Uuid          string     `json:"uuid" gorm:"type:varchar(100);index;comment:uuid;unique;comment:uuid"`
+	NickName      string     `json:"nick_name" gorm:"column:nick_name;type:char(20);comment:昵称"`
+	UserName      string     `json:"user_name" gorm:"column:user_name;type:varchar(50);unique;comment:用户名"`
+	Password      string     `json:"-" gorm:"column:password;type:varchar(100);comment:密码"`
+	Salt          string     `json:"-" gorm:"column:salt;varchar(50);comment:延码"`
+	RoleId        uint       `json:"role_id" gorm:"column:role_id;comment:角色Id"`
 	Avatar        string     `json:"avatar" gorm:"type:varchar(100);comment:头像地址"`
-	Lock          *bool      `json:"lock" gorm:"column:lock;default:false"`
-	Token         *string    `json:"-" gorm:";column:token;type:text"`
-	LastLoginIp   string     `json:"last_login_ip" gorm:"column:last_login_ip;type:varchar(20)"`
-	LastLoginTime *time.Time `json:"last_login_time" gorm:"column:last_login_time"`
-	GoogleKey     *string    `json:"-" gorm:"column:google_key;type:varchar(100)"`
+	Lock          *bool      `json:"lock" gorm:"column:lock;default:false;comment:是否锁定"`
+	Token         *string    `json:"-" gorm:";column:token;type:text;comment:token"`
+	LastLoginIp   string     `json:"last_login_ip" gorm:"column:last_login_ip;type:varchar(20);comment:最后登录ip"`
+	LastLoginTime *time.Time `json:"last_login_time" gorm:"column:last_login_time;comment:最后登录时间"`
+	GoogleKey     *string    `json:"-" gorm:"column:google_key;type:varchar(100);comment:谷歌密钥"`
 }
 
 func (*Administrator) TableName() string {
@@ -129,14 +129,14 @@ func (r *Administrator) DataInit(db *gorm.DB) error {
 
 type AdministratorLog struct {
 	MysqlModel
-	AdminId   int64   `json:"admin_id" gorm:"admin_id"`
-	RequestId string  `json:"request_id" gorm:"type:varchar(100)"`
-	Message   string  `json:"message" gorm:"type:text"`
-	Table     *string `json:"table" gorm:"type:varchar(50)"`
-	Action    string  `json:"action" gorm:"type:varchar(20)"`
-	Ip        string  `json:"ip" gorm:"type:varchar(20)"`
-	UserAgent string  `json:"user_agent" gorm:"type:text"`
-	Extends   *string `json:"extends" gorm:"type:json"`
+	AdminId   int64   `json:"admin_id" gorm:"admin_id;comment:管理员Id"`
+	RequestId string  `json:"request_id" gorm:"type:varchar(100);comment:请求Id"`
+	Message   string  `json:"message" gorm:"type:text;comment:消息"`
+	Table     *string `json:"table" gorm:"type:varchar(50);comment:表名称"`
+	Action    string  `json:"action" gorm:"type:varchar(20);comment:请求方法"`
+	Ip        string  `json:"ip" gorm:"type:varchar(20);comment:ip"`
+	UserAgent string  `json:"user_agent" gorm:"type:text;comment:用户请求信息"`
+	Extends   *string `json:"extends" gorm:"type:json;comment:请求返回信息"`
 }
 
 func (*AdministratorLog) TableName() string {
@@ -176,7 +176,7 @@ func (a *Role) GetById(db *gorm.DB, id interface{}) error {
 		return err
 	}
 	if a.Id == 0 {
-		return errors.New("IdNotExits")
+		return errors.New("role not found")
 	}
 	return nil
 }
@@ -218,6 +218,8 @@ type Permission struct {
 	MysqlModel
 	ParentId uint   `json:"parent_id" gorm:"column:parent_id;comment:上级菜单Id"`
 	Name     string `json:"name" gorm:"column:name;type:varchar(50);comment:菜单名;unique"`
+	Icon     string `json:"icon" gorm:"column:icon;type:varchar(200);comment:图标"`
+	Router   string `json:"router" gorm:"column:router;type:varchar(80);comment:前端路由"`
 	Auth     string `json:"auth" gorm:"column:auth;type:varchar(80);comment:权限;unique"`
 	Value    string `json:"value" gorm:"column:value;type:varchar(50);comment:扩展名"`
 }
@@ -286,11 +288,43 @@ type NodePermission struct {
 	Id       uint              `json:"id"`
 	ParentId uint              `json:"parent_id"`
 	Name     string            `json:"name"`
+	Icon     string            `json:"icon"`
+	Router   string            `json:"router"`
 	Auth     string            `json:"auth"`
 	Children []*NodePermission `json:"children"`
 }
 
-// MenuTree 递归树[满足无限层级递归]
+func (m *Permission) UserTree(db *gorm.DB, userPermissions []string) ([]NodePermission, error) {
+	menusNodeTree := make([]NodePermission, 0) // 根节点
+	// 所有节点
+	allMenus := make([]Permission, 0)
+	if err := db.Model(&Permission{}).
+		Where("auth in (?)", userPermissions).
+		Find(&allMenus).Error; err != nil {
+		return menusNodeTree, err
+	}
+	for _, m := range allMenus {
+		childMenus := make([]*NodePermission, 0)
+		if m.ParentId == 0 {
+			rootNode := NodePermission{
+				Id:       m.Id,
+				ParentId: m.ParentId,
+				Name:     m.Name,
+				Auth:     m.Auth,
+				Icon:     m.Icon,
+				Router:   m.Router,
+				Children: childMenus,
+			}
+			menusNodeTree = append(menusNodeTree, rootNode)
+		}
+	}
+	for i, _ := range menusNodeTree {
+		m.walk(allMenus, &menusNodeTree[i])
+	}
+	return menusNodeTree, nil
+}
+
+// MenuTree 系统递归树[满足无限层级递归]
 func (m *Permission) MenuTree(db *gorm.DB) ([]NodePermission, error) {
 	menusNodeTree := make([]NodePermission, 0) // 根节点
 	// 所有节点
@@ -306,6 +340,8 @@ func (m *Permission) MenuTree(db *gorm.DB) ([]NodePermission, error) {
 				ParentId: m.ParentId,
 				Name:     m.Name,
 				Auth:     m.Auth,
+				Icon:     m.Icon,
+				Router:   m.Router,
 				Children: childMenus,
 			}
 			menusNodeTree = append(menusNodeTree, rootNode)
@@ -331,6 +367,8 @@ func (m *Permission) walk(allMenus []Permission, rootNode *NodePermission) {
 			ParentId: node.ParentId,
 			Name:     node.Name,
 			Auth:     node.Auth,
+			Icon:     node.Icon,
+			Router:   node.Router,
 			Children: nil,
 		}
 		m.walk(allMenus, &newNode)
@@ -348,6 +386,8 @@ func (m *Permission) childrenList(allMenus []Permission, pId uint) (menusNodeTre
 				ParentId: m.ParentId,
 				Name:     m.Name,
 				Auth:     m.Auth,
+				Icon:     m.Icon,
+				Router:   m.Router,
 				Children: nil,
 			}
 			menusNodeTree = append(menusNodeTree, rootNode)
