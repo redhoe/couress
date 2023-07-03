@@ -11,7 +11,7 @@ type TransactionEthPending struct {
 	ChainId           uint            `json:"chain_id" gorm:""`
 	Chain             *modeler.Chain  `json:"chain" gorm:""`
 	CoinId            *uint           `json:"coin_id" gorm:""`
-	Coin              *modeler.Coin   `json:"coin" gorm:""`
+	CoinDecimal       int32           `json:"coin_decimal" gorm:""`
 	Hash              string          `json:"hash" gorm:"index;type:varchar(100)"`
 	Sender            string          `json:"sender" gorm:"index;type:varchar(42)"`
 	Receive           string          `json:"receive" gorm:"index;"`
@@ -55,8 +55,8 @@ func (t *TransactionEthPending) TransactionEthResponse() TransactionEthResponse 
 		IsPending: true,
 	}
 
-	if t.Coin != nil {
-		resp.Amount = resp.Amount.Div(decimal.New(1, int32(t.Coin.Decimal))).RoundFloor(modeler.EthCoinBalanceDecimal)
+	if *t.CoinId > 0 {
+		resp.Amount = resp.Amount.Div(decimal.New(1, int32(t.CoinDecimal))).RoundFloor(modeler.EthCoinBalanceDecimal)
 	} else {
 		resp.Amount = resp.Amount.Div(decimal.New(1, 18)).RoundFloor(modeler.EthCoinBalanceDecimal)
 	}
