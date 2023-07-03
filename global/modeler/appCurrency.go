@@ -50,7 +50,8 @@ func (c *CurrencyExchangeRate) ExchangePrice(usdPrice decimal.Decimal) decimal.D
 // Exchange 把对应USD价值 转化为 指定币种价值
 func (c *CurrencyExchangeRate) Exchange(usdAmount decimal.Decimal) CurrencyInfo {
 	info := CurrencyInfo{
-		Uint:   c.Unit,
+		//Uint:   c.Unit,
+		Unit:   c.Unit,
 		Symbol: c.Symbol,
 		Value:  usdAmount.Mul(decimal.NewFromFloat(c.Rate)).RoundFloor(CurrencyShowDecimal),
 	}
@@ -59,7 +60,8 @@ func (c *CurrencyExchangeRate) Exchange(usdAmount decimal.Decimal) CurrencyInfo 
 
 func (c *CurrencyExchangeRate) CurrencyInfo(usdAmount decimal.Decimal) CurrencyInfo {
 	info := CurrencyInfo{
-		Uint:   c.Unit,
+		//Uint:   c.Unit,
+		Unit:   c.Unit,
 		Symbol: c.Symbol,
 		Value:  usdAmount.Mul(decimal.NewFromFloat(c.Rate)).RoundFloor(2),
 	}
@@ -68,7 +70,8 @@ func (c *CurrencyExchangeRate) CurrencyInfo(usdAmount decimal.Decimal) CurrencyI
 
 func (c *CurrencyExchangeRate) ToInfoFromUsd2(usdAmount decimal.Decimal) CurrencyInfo {
 	info := CurrencyInfo{
-		Uint:   c.Unit,
+		//Uint:   c.Unit,
+		Unit:   c.Unit,
 		Symbol: c.Symbol,
 		Value:  usdAmount.Mul(decimal.NewFromFloat(c.Rate)),
 	}
@@ -76,7 +79,8 @@ func (c *CurrencyExchangeRate) ToInfoFromUsd2(usdAmount decimal.Decimal) Currenc
 }
 
 type CurrencyInfo struct {
-	Uint   *string         `json:"uint"`
+	//Uint   *string         `json:"uint"`
+	Unit   *string         `json:"unit"`
 	Symbol string          `json:"symbol"`
 	Value  decimal.Decimal `json:"value"`
 }
