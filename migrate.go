@@ -22,7 +22,7 @@ func Migrate(args ...modeler.MigrateTable) {
 		modeler.NewRole(),
 		modeler.NewPermission(),
 		modeler.NewConfig(),
-		modeler.NewOrders(), // 测试用
+		//modeler.NewTestTable(), // 测试用
 	}
 	baseTables := []modeler.MigrateTable{
 		modeler.NewChain(),

@@ -4,7 +4,7 @@ import (
 	"github.com/shopspring/decimal"
 )
 
-type Orders struct {
+type TestTable struct {
 	MysqlModel
 	UserId uint            `json:"userId" gorm:"column:user_id;type:int;comment:用户Id"`
 	Name   string          `json:"name" gorm:"column:name;type:varchar(100);comment:名称"`
@@ -15,18 +15,18 @@ type Orders struct {
 	Nums   int64           `json:"-" gorm:"column:nums;type:int;comment:nums改字段不准修改"`
 }
 
-func NewOrders() *Orders {
-	return &Orders{}
+func NewTestTable() *TestTable {
+	return &TestTable{}
 }
 
-func (*Orders) TableName() string {
-	return "app_orders"
+func (*TestTable) TableName() string {
+	return "test_table"
 }
 
-func (*Orders) Comment() string {
-	return "订单表"
+func (*TestTable) Comment() string {
+	return "测试用表"
 }
 
-func (*Orders) KeyMap() map[string]string {
-	return reflectModelToMap(Orders{})
+func (*TestTable) KeyMap() map[string]string {
+	return reflectModelToMap(TestTable{})
 }
