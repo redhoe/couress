@@ -34,6 +34,7 @@ var WalletTypeList = []WalletType{
 type WalletChain struct {
 	MysqlModel
 	ChainId          uint            `json:"chain_id" gorm:"comment:链Id"`
+	Chain            *Chain          `json:"chain" gorm:"foreignKey:chain_id;references:id;comment:外键"`
 	IdentityId       uint            `json:"identity_id" gorm:"comment:身份ID"`
 	Identity         string          `json:"identity" gorm:"type:varchar(50);comment:身份ID"`
 	ChainType        ChainType       `json:"chain_type" gorm:"type:varchar(20);comment:链类型"`
@@ -115,6 +116,7 @@ type WalletCoin struct {
 	MysqlModel
 	IdentityId    uint            `json:"identity_id" gorm:"comment:身份ID"`
 	WalletChainId uint            `json:"wallet_chain_id" gorm:"comment:链Id"`
+	WalletChain   *WalletChain    `json:"wallet_chain" gorm:"comment:链信息"`
 	CoinId        uint            `json:"coin_id" gorm:"comment:币种ID"`
 	Coin          *Coin           `json:"coin" gorm:"comment:钱包币种"`
 	Symbol        string          `json:"symbol" gorm:"type:varchar(20);comment:币种"`

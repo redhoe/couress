@@ -63,7 +63,7 @@ func (c *CurrencyExchangeRate) CurrencyInfo(usdAmount decimal.Decimal) CurrencyI
 		//Uint:   c.Unit,
 		Unit:   c.Unit,
 		Symbol: c.Symbol,
-		Value:  usdAmount.Mul(decimal.NewFromFloat(c.Rate)).RoundFloor(2),
+		Value:  usdAmount.Mul(decimal.NewFromFloat(c.Rate)).RoundFloor(CurrencyShowDecimal),
 	}
 	return info
 }
@@ -73,7 +73,7 @@ func (c *CurrencyExchangeRate) ToInfoFromUsd2(usdAmount decimal.Decimal) Currenc
 		//Uint:   c.Unit,
 		Unit:   c.Unit,
 		Symbol: c.Symbol,
-		Value:  usdAmount.Mul(decimal.NewFromFloat(c.Rate)),
+		Value:  usdAmount.Mul(decimal.NewFromFloat(c.Rate)).RoundFloor(CurrencyShowDecimal),
 	}
 	return info
 }

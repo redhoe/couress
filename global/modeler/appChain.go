@@ -109,7 +109,7 @@ var DefaultChainList = ChainList{
 		},
 	},
 	{Name: "Ethereum goerli testnet", Alias: CoinTypeERC20, Type: ChainTypeETHEREUM, Symbol: ChainSymbol("ETHg"), Enable: true, Testnet: true,
-		Config: &ChainConfig{Decimal: 18, ChainId: 5, WebUrl: "https://goerli.etherscan.io/", RpcUrl: "https://goerli.infura.io/v3/14e5c24b98634138a9127fc8db299970"},
+		Config: &ChainConfig{Decimal: 18, ChainId: 5, WebUrl: "https://goerli.etherscan.io/", RpcUrl: "https://rpc.ankr.com/eth_goerli/2d9c826edabe14b57de57610d28b13c5755dc7900c470de7362d5aee2b393949"},
 		SwapConfig: &ChainSwapConfig{
 			RouterV2ContractAddress: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
 			UsdtTokenAddress:        "0xC2C527C0CACF457746Bd31B2a698Fe89de2b6d49",
