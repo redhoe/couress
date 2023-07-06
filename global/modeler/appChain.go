@@ -100,40 +100,46 @@ func (list ChainList) BySymbol(symbol ChainSymbol) (Chain, bool) {
 }
 
 var DefaultChainList = ChainList{
-	{Name: "Bitcoin", Alias: "BTC", Type: ChainTypeBITCOIN, Symbol: BTC, Enable: true, Testnet: false, Config: &ChainConfig{Decimal: 8}},
-	{Name: "Ethereum", Alias: CoinTypeERC20, Type: ChainTypeETHEREUM, Symbol: ETH, Enable: true, Testnet: true,
+	{Name: "Bitcoin", Alias: "BTC", Type: ChainTypeBITCOIN, Symbol: BTC, Decimal: 8, Enable: true, Testnet: false, Config: &ChainConfig{Decimal: 8}},
+	{Name: "Ethereum", Alias: CoinTypeERC20, Type: ChainTypeETHEREUM, Symbol: ETH, Decimal: 18, Enable: true, Testnet: true,
 		Config: &ChainConfig{Decimal: 18, ChainId: 1, WebUrl: "https://etherscan.io/", RpcUrl: "https://mainnet.infura.io/v3/14e5c24b98634138a9127fc8db299970"},
 		SwapConfig: &ChainSwapConfig{
 			RouterV2ContractAddress: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
 			UsdtTokenAddress:        "0xdAC17F958D2ee523a2206206994597C13D831ec7",
 		},
 	},
-	{Name: "Ethereum goerli testnet", Alias: CoinTypeERC20, Type: ChainTypeETHEREUM, Symbol: ChainSymbol("ETHg"), Enable: true, Testnet: true,
+	{Name: "Ethereum goerli testnet", Alias: CoinTypeERC20, Type: ChainTypeETHEREUM, Symbol: ChainSymbol("ETHg"), Decimal: 18, Enable: true, Testnet: true,
 		Config: &ChainConfig{Decimal: 18, ChainId: 5, WebUrl: "https://goerli.etherscan.io/", RpcUrl: "https://rpc.ankr.com/eth_goerli/2d9c826edabe14b57de57610d28b13c5755dc7900c470de7362d5aee2b393949"},
 		SwapConfig: &ChainSwapConfig{
 			RouterV2ContractAddress: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
 			UsdtTokenAddress:        "0xC2C527C0CACF457746Bd31B2a698Fe89de2b6d49",
 		},
 	},
-	{Name: "BNB Smart Chain", Alias: CoinTypeBEP20, Type: ChainTypeETHEREUM, Symbol: BNB, Enable: true, Testnet: false,
+	{Name: "BNB Smart Chain", Alias: CoinTypeBEP20, Type: ChainTypeETHEREUM, Symbol: BNB, Decimal: 18, Enable: true, Testnet: false,
 		Config: &ChainConfig{Decimal: 18, ChainId: 56, WebUrl: "https://bscscan.com/", RpcUrl: "https://bsc-dataseed1.binance.org/"},
 		SwapConfig: &ChainSwapConfig{
 			RouterV2ContractAddress: "0x10ED43C718714eb63d5aA57B78B54704E256024E",
 			UsdtTokenAddress:        "0x55d398326f99059fF775485246999027B3197955",
 		},
 	},
-	{Name: "BNB Smart Chain testnet", Alias: CoinTypeBEP20, Type: ChainTypeETHEREUM, Symbol: ChainSymbol("BNBt"), Testnet: true, Enable: true,
+	{Name: "BNB Smart Chain testnet", Alias: CoinTypeBEP20, Type: ChainTypeETHEREUM, Symbol: ChainSymbol("BNBt"), Decimal: 18, Testnet: true, Enable: true,
 		Config: &ChainConfig{Decimal: 18, ChainId: 97, WebUrl: "https://testnet.bscscan.com/", RpcUrl: "https://data-seed-prebsc-1-s1.binance.org:8545/"}},
-	{Name: "Huobi ECO Chain", Alias: CoinTypeHTC20, Type: ChainTypeETHEREUM, Symbol: HT, Enable: true, Testnet: false,
+	{Name: "Huobi ECO Chain", Alias: CoinTypeHTC20, Type: ChainTypeETHEREUM, Symbol: HT, Decimal: 18, Enable: true, Testnet: false,
 		Config: &ChainConfig{Decimal: 18, ChainId: 128, WebUrl: "https://www.hecoinfo.com/", RpcUrl: "https://http-mainnet.hecochain.com"}},
-	{Name: "Huobi ECO Chain testnet", Alias: CoinTypeHTC20, Type: ChainTypeETHEREUM, Symbol: ChainSymbol("HTt"), Testnet: true, Enable: true,
+	{Name: "Huobi ECO Chain testnet", Alias: CoinTypeHTC20, Type: ChainTypeETHEREUM, Symbol: ChainSymbol("HTt"), Decimal: 18, Testnet: true, Enable: true,
 		Config: &ChainConfig{Decimal: 18, ChainId: 256, WebUrl: "https://testnet.hecoinfo.com/", RpcUrl: "https://http-testnet.hecochain.com"}},
-	{Name: "Polygon", Alias: CoinTypeERC20, Type: ChainTypeETHEREUM, Symbol: ChainSymbol("MATIC"), Testnet: false, Enable: true,
+	{Name: "Polygon", Alias: CoinTypeERC20, Type: ChainTypeETHEREUM, Symbol: ChainSymbol("MATIC"), Decimal: 18, Testnet: false, Enable: true,
 		Config: &ChainConfig{Decimal: 18, ChainId: 137, WebUrl: "https://polygonscan.com/", RpcUrl: "https://rpc.ankr.com/polygon/1985783691c9320af01c055f8a9a315ce53308b409e1e833084f1d81b216e612", WsUrl: "wss://rpc.ankr.com/polygon/ws/1985783691c9320af01c055f8a9a315ce53308b409e1e833084f1d81b216e612"}},
-	{Name: "Fantom", Alias: CoinTypeERC20, Type: ChainTypeETHEREUM, Symbol: ChainSymbol("FTM"), Testnet: false, Enable: true,
+	{Name: "Fantom", Alias: CoinTypeERC20, Type: ChainTypeETHEREUM, Symbol: ChainSymbol("FTM"), Decimal: 18, Testnet: false, Enable: true,
 		Config: &ChainConfig{Decimal: 18, ChainId: 250, WebUrl: "https://ftmscan.com/", RpcUrl: "https://rpc.ankr.com/polygon/1985783691c9320af01c055f8a9a315ce53308b409e1e833084f1d81b216e612", WsUrl: "wss://rpc.ankr.com/fantom/ws/1985783691c9320af01c055f8a9a315ce53308b409e1e833084f1d81b216e612"}},
-	{Name: "Bitcoin test3", Alias: "BTC", Type: ChainTypeBITCOIN, Symbol: ChainSymbol("BTCt"), Enable: true, Testnet: true,
+	{Name: "Bitcoin test3", Alias: "BTC", Type: ChainTypeBITCOIN, Symbol: ChainSymbol("BTCt"), Decimal: 8, Enable: true, Testnet: true,
 		Config: &ChainConfig{Decimal: 8, RpcUrl: ""},
+	},
+	{Name: "Tron Grid", Alias: "TRC20", Type: ChainTypeTron, Symbol: ChainSymbol("TRX"), Decimal: 6, Enable: true, Testnet: false,
+		Config: &ChainConfig{Decimal: 6, RpcUrl: "grpc.trongrid.io:50051", ApiUrl: "https://rpc.ankr.com/premium-http/tron/2d9c826edabe14b57de57610d28b13c5755dc7900c470de7362d5aee2b393949", ApiKey: "d48253fb-0af7-4108-a9b0-a6d8635f09d6", WebUrl: "https://tronscan.org/#/", DefaultGas: 15},
+	},
+	{Name: "Tron Nile testnet", Alias: "TRC20", Type: ChainTypeTron, Symbol: ChainSymbol("TRXt"), Decimal: 6, Enable: true, Testnet: true,
+		Config: &ChainConfig{Decimal: 6, RpcUrl: "grpc.nile.trongrid.io:50051", ApiUrl: "https://api.nileex.io", ApiKey: "557c107e-86ec-4e8a-8c87-45ba052b304e", WebUrl: "https://tronscan.org/#/", DefaultGas: 20},
 	},
 }
 
@@ -159,6 +165,7 @@ type Chain struct {
 	Alias       CoinType         `json:"alias" gorm:"type:varchar(20);comment:别名"`
 	Type        ChainType        `json:"type" gorm:"type:varchar(10);comment:链类型"`
 	Symbol      ChainSymbol      `json:"symbol" gorm:"type:varchar(10);comment:主币名"`
+	Decimal     int32            `json:"decimal" gorm:"comment:主币精度"`
 	Enable      bool             `json:"enable" gorm:"comment:是否开放"`
 	Icon        string           `json:"icon" gorm:"type:varchar(200);comment:图标"`
 	Desc        string           `json:"desc" gorm:"type:varchar(255);comment:描述"` // 链种描述

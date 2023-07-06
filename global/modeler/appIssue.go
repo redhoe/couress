@@ -23,14 +23,15 @@ func NewIssueTag() *IssueTag {
 type Issue struct {
 	MysqlModel
 	MysqlDeleteModel
-	IdentityId uint      `json:"identity_id" gorm:""`
-	TagId      uint      `json:"tag_id" gorm:""`
-	Tag        *IssueTag `json:"tag" gorm:"foreignKey:tag_id;references:id;comment:关联1对1"`
-	Content    string    `json:"content" gorm:""`
-	Image      string    `json:"image" gorm:"type:text"`
-	Contact    string    `json:"contact" gorm:""`
-	Status     int       `json:"status" gorm:""`
-	Reply      bool      `json:"reply" gorm:"default:false"`
+	IdentityId   uint          `json:"identity_id" gorm:""`
+	TagId        uint          `json:"tag_id" gorm:""`
+	Tag          *IssueTag     `json:"tag" gorm:"foreignKey:tag_id;references:id;comment:关联1对1"`
+	Content      string        `json:"content" gorm:""`
+	Image        string        `json:"image" gorm:"type:text"`
+	Contact      string        `json:"contact" gorm:""`
+	Status       int           `json:"status" gorm:""`
+	Reply        bool          `json:"reply" gorm:"default:false"`
+	IssueMessage *IssueMessage `json:"message" gorm:""`
 }
 
 func (Issue) TableName() string {
@@ -48,6 +49,7 @@ type IssueMessage struct {
 	MysqlModel
 	MysqlDeleteModel
 	IssueId uint   `json:"issue_id" gorm:"comment:反馈问题ID"`
+	Issue   *Issue `json:"issue" gorm:"comment:关联1对1"`
 	Message string `json:"message" gorm:"comment:回复内容"`
 	AdminId *uint  `json:"admin_id" gorm:"comment:客服Id"`
 }

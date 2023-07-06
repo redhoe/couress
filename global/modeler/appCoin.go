@@ -45,7 +45,7 @@ func (*Coin) TableName() string {
 }
 
 func (*Coin) Comment() string {
-	return "币信息"
+	return "代币信息"
 }
 
 func NewCoin() *Coin {

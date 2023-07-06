@@ -42,7 +42,9 @@ type WalletChain struct {
 	WalletAddress    string          `json:"wallet_address" gorm:"type:varchar(60);comment:钱包地址"`
 	FirstBlockNumber *int64          `json:"first_block_number" gorm:"comment:首块"`
 	LastBlockNumber  *int64          `json:"last_block_number" gorm:"comment:尾块"`
-	Balance          decimal.Decimal `json:"balance" gorm:"type:decimal(50,18);comment:余额"`
+	Decimal          int32           `json:"decimal" gorm:"comment:精度"`
+	Balance          decimal.Decimal `json:"balance" gorm:"type:decimal(38,18);comment:余额"`
+	BalanceInt       decimal.Decimal `json:"BalanceInt" gorm:"type:decimal(50);comment:int"`
 }
 
 type T struct {
@@ -73,6 +75,10 @@ func (this *WalletChain) GetOrCreate(db *gorm.DB) error {
 		Debug().
 		Find(&this).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
+			// 获取链信息
+			chain := NewChain()
+			chain.GetRecord(db, "id", this.ChainId)
+			this.Decimal = chain.Config.Decimal
 			return db.Create(&this).Error
 		}
 		return errors.New("SystemError")
@@ -105,7 +111,8 @@ func (this *WalletChain) UpdateBalance(db *gorm.DB) error {
 		Where(fmt.Sprintf("%s = ?", gocast.ToString("Chain_Id")), this.ChainId).
 		Where(fmt.Sprintf("%s = ?", gocast.ToString("Wallet_Address")), this.WalletAddress).
 		Updates(map[string]interface{}{
-			"balance": this.Balance,
+			"balance":     this.Balance.Div(decimal.New(1, this.Decimal)),
+			"balance_int": this.Balance,
 		}).Error; err != nil {
 		return err
 	}
@@ -122,7 +129,8 @@ type WalletCoin struct {
 	Symbol        string          `json:"symbol" gorm:"type:varchar(20);comment:币种"`
 	Address       string          `json:"address" gorm:"type:varchar(60);comment:地址"`
 	Decimal       int32           `json:"decimal" gorm:"comment:精度"`
-	Balance       decimal.Decimal `json:"balance" gorm:"type:decimal(50,18);comment:可用余额"`
+	Balance       decimal.Decimal `json:"balance" gorm:"type:decimal(38,18);comment:可用余额"`
+	BalanceInt    decimal.Decimal `json:"BalanceInt" gorm:"type:decimal(50);comment:int"`
 }
 
 func (*WalletCoin) TableName() string {
@@ -130,7 +138,7 @@ func (*WalletCoin) TableName() string {
 }
 
 func (*WalletCoin) Comment() string {
-	return "用户钱包币种信息"
+	return "用户钱包代币信息"
 }
 
 func NewWalletCoin() *WalletCoin {
@@ -153,8 +161,9 @@ func (c *WalletCoin) UpdateTokenBalance(db *gorm.DB, token string) error {
 		Where(fmt.Sprintf("%s = ?", gocast.ToString("coin_id")), coin.Id).
 		Where(fmt.Sprintf("%s = ?", gocast.ToString("address")), c.Address).Debug().
 		Updates(map[string]interface{}{
-			"balance":   c.Balance,
-			"`decimal`": c.Decimal,
+			"`decimal`":   c.Decimal,
+			"balance":     c.Balance.Div(decimal.New(1, c.Decimal)),
+			"balance_int": c.Balance,
 		}).Error; err != nil {
 		return err
 	}
