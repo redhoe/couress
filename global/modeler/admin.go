@@ -5,6 +5,7 @@ import (
 	"github.com/jameskeane/bcrypt"
 	"github.com/redhoe/couress/utils/simple"
 	"gorm.io/gorm"
+	"strings"
 	"time"
 )
 
@@ -238,6 +239,9 @@ func (*Permission) Comment() string {
 
 // FindOrCreateAuth 查找创建权限菜单
 func (m *Permission) FindOrCreateAuth(db *gorm.DB, auth string) error {
+	if strings.Contains(auth, "*") {
+		return nil
+	}
 	if err := db.Find(&m, "auth", auth).Error; err != nil {
 		return err
 	}

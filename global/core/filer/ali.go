@@ -27,6 +27,10 @@ func AliEngin() *AliOss {
 		if err != nil {
 			panic(err)
 		}
+		err = client.SetBucketACL(confer.AppConfServer.Oss.BucketName, oss.ACLPublicReadWrite)
+		if err != nil {
+			panic(err)
+		}
 		aliEngine = &AliOss{
 			client,
 			confer.AppConfServer.Oss.BucketName,
@@ -51,10 +55,11 @@ func (s *AliOss) UploadMultipart(file *multipart.FileHeader, fileName, savePath 
 	}
 	// 上传文件
 
-	objectName := simple.ToPath(s.basePath, savePath, fileName) // 本地保存绝对路径
-	visitPath := simple.ToPath(s.bucketUrl, savePath, fileName) // web页面访问Url
+	objectName := simple.ToPath(s.basePath, savePath, fileName)             // 本地保存绝对路径
+	visitPath := simple.ToPath(s.bucketUrl, s.basePath, savePath, fileName) // web页面访问Url
 
 	// 将文件流上传至upload下
+
 	err = bucket.PutObject(objectName, src)
 	if err != nil {
 		fmt.Println("Error:", err)

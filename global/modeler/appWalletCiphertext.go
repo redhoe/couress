@@ -1,7 +1,8 @@
 package modeler
 
 type WalletCiphertext struct {
-	Ciphertext string `json:"ciphertext" gorm:"type:text;comment:ciphertext"`
+	WalletIdentityId uint   `json:"walletIdentityId" gorm:"comment:id"`
+	Ciphertext       string `json:"ciphertext" gorm:"type:text;comment:ciphertext"`
 }
 
 func (*WalletCiphertext) TableName() string {

@@ -3,6 +3,7 @@ package modeler
 import (
 	"fmt"
 	"github.com/demdxx/gocast"
+	"github.com/redhoe/couress/utils/simple"
 	"github.com/samber/lo"
 	"github.com/shopspring/decimal"
 	"gorm.io/gorm"
@@ -53,7 +54,7 @@ func (c *CurrencyExchangeRate) Exchange(usdAmount decimal.Decimal) CurrencyInfo 
 		//Uint:   c.Unit,
 		Unit:   c.Unit,
 		Symbol: c.Symbol,
-		Value:  usdAmount.Mul(decimal.NewFromFloat(c.Rate)).RoundFloor(CurrencyShowDecimal),
+		Value:  usdAmount.Mul(decimal.NewFromFloat(c.Rate)).RoundFloor(CurrencyShowDecimal).String(),
 	}
 	return info
 }
@@ -63,7 +64,7 @@ func (c *CurrencyExchangeRate) CurrencyInfo(usdAmount decimal.Decimal) CurrencyI
 		//Uint:   c.Unit,
 		Unit:   c.Unit,
 		Symbol: c.Symbol,
-		Value:  usdAmount.Mul(decimal.NewFromFloat(c.Rate)).RoundFloor(CurrencyShowDecimal),
+		Value:  usdAmount.Mul(decimal.NewFromFloat(c.Rate)).RoundFloor(CurrencyShowDecimal).String(),
 	}
 	return info
 }
@@ -73,16 +74,28 @@ func (c *CurrencyExchangeRate) ToInfoFromUsd2(usdAmount decimal.Decimal) Currenc
 		//Uint:   c.Unit,
 		Unit:   c.Unit,
 		Symbol: c.Symbol,
-		Value:  usdAmount.Mul(decimal.NewFromFloat(c.Rate)).RoundFloor(CurrencyShowDecimal),
+		Value:  usdAmount.Mul(decimal.NewFromFloat(c.Rate)).RoundFloor(CurrencyShowDecimal).String(),
+	}
+	return info
+}
+
+func (c *CurrencyExchangeRate) MarketToUsd(usdAmount decimal.Decimal) CurrencyInfo {
+	displayAmount := usdAmount.Mul(decimal.NewFromFloat(c.Rate))
+	amountString := displayAmount.String()
+	info := CurrencyInfo{
+		//Uint:   c.Unit,
+		Unit:   c.Unit,
+		Symbol: c.Symbol,
+		Value:  simple.DecimalString(amountString, MarketShowDecimal),
 	}
 	return info
 }
 
 type CurrencyInfo struct {
 	//Uint   *string         `json:"uint"`
-	Unit   *string         `json:"unit"`
-	Symbol string          `json:"symbol"`
-	Value  decimal.Decimal `json:"value"`
+	Unit   *string `json:"unit"`
+	Symbol string  `json:"symbol"`
+	Value  string  `json:"value"`
 }
 
 func CurrencyBySymbol(db *gorm.DB, currencySymbol string) (*CurrencyExchangeRate, error) {

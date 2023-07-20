@@ -11,3 +11,8 @@ func TestFloor(t *testing.T) {
 	t.Log("RoundCash:", decimal.NewFromFloat(1.23456789).RoundCash(5).String())
 	t.Log("RoundUp:", decimal.NewFromFloat(1.23456789).RoundUp(5).String())
 }
+
+func TestStr(t *testing.T) {
+	tsStr := "12.00023456"
+	t.Log(DecimalString(tsStr, 6))
+}

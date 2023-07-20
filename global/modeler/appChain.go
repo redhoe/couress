@@ -168,12 +168,15 @@ type Chain struct {
 	Decimal     int32            `json:"decimal" gorm:"comment:主币精度"`
 	Enable      bool             `json:"enable" gorm:"comment:是否开放"`
 	Icon        string           `json:"icon" gorm:"type:varchar(200);comment:图标"`
+	Color       string           `json:"color" gorm:"type:varchar(200);comment:色值"`
+	ColorBg     string           `json:"color_bg" gorm:"type:varchar(200);comment:底色图片"`
 	Desc        string           `json:"desc" gorm:"type:varchar(255);comment:描述"` // 链种描述
 	Testnet     bool             `json:"testnet" gorm:"comment:是否测试网络"`
 	Config      *ChainConfig     `json:"config" gorm:"type:json;comment:配置"`
 	SwapConfig  *ChainSwapConfig `json:"swap_config" gorm:"type:json"`
 	MarketApiId *string          `json:"marketApiId" gorm:"type:varchar(100);comment:配置匹配的apiId"`
 	UsdRate     decimal.Decimal  `json:"usdRate" gorm:"default:0;type:decimal(38,18);comment:USD汇率"`
+	Sort        int              `json:"sort" gorm:" default:9999;comment:排序"`
 }
 
 func NewChain() *Chain {

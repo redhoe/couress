@@ -17,34 +17,37 @@ func Migrate(args ...modeler.MigrateTable) {
 	slog.Info("开始迁移InnoDB引擎表")
 	mTables := make([]modeler.MigrateTable, 0)
 	adminTables := []modeler.MigrateTable{
-		modeler.NewAdministrator(),
-		modeler.NewAdministratorLog(),
-		modeler.NewRole(),
-		modeler.NewPermission(),
-		modeler.NewConfig(),
+		//modeler.NewAdministrator(),
+		//modeler.NewAdministratorLog(),
+		//modeler.NewRole(),
+		//modeler.NewPermission(),
+		//modeler.NewConfig(),
 		//modeler.NewTestTable(), // 测试用
 	}
 	baseTables := []modeler.MigrateTable{
-		modeler.NewChain(),
-		modeler.NewChainNode(),
-		modeler.NewCoin(),
-		modeler.NewCurrencyExchangeRate(),
-		modeler.NewDocumentTag(),
-		modeler.NewDocumentBanner(),
-		modeler.NewDocument(),
-		modeler.NewIssueTag(),
-		modeler.NewIssue(),
-		modeler.NewIssueMessage(),
-		modeler.NewMarketCoin(),
-		modeler.NewMarket(),
-		modeler.NewPoster(),
-		modeler.NewVersionDocument(),
+		//modeler.NewChain(),
+		//modeler.NewChainNode(),
+		//modeler.NewCoin(),
+		//modeler.NewCurrencyExchangeRate(),
+		//modeler.NewDocumentTag(),
+		//modeler.NewDocumentBanner(),
+		//modeler.NewDocument(),
+		//modeler.NewIssueTag(),
+		//modeler.NewIssue(),
+		//modeler.NewIssueMessage(),
+		//modeler.NewMarketCoin(),
+		//modeler.NewMarket(),
+		//modeler.NewPoster(),
+		//modeler.NewVersionDocument(),
 		modeler.NewVersion(),
-		modeler.NewVersionGkeyModel(),
-		modeler.NewWalletCiphertext(),
-		modeler.NewWalletIdentity(),
-		modeler.NewWalletChain(),
-		modeler.NewWalletCoin(),
+		//modeler.NewVersionGkeyModel(),
+		//modeler.NewWalletCiphertext(),
+		//modeler.NewWalletIdentity(),
+		//modeler.NewWalletChain(),
+		//modeler.NewWalletCoin(),
+		//
+		// v2
+		modeler.NewProtocols(),
 	}
 	mTables = append(mTables, adminTables...)
 	mTables = append(mTables, baseTables...)
@@ -75,15 +78,15 @@ func dataInit(db *gorm.DB, slog *zap.SugaredLogger) {
 }
 
 func dataAdiInit(db *gorm.DB, slog *zap.SugaredLogger) {
-	if err := modeler.NewAdministrator().DataInit(db); err != nil {
-		slog.Error("error:", err.Error())
-	}
-	if err := modeler.NewRole().DataInit(db); err != nil {
-		slog.Error("error:", err.Error())
-	}
-	if err := modeler.NewPermission().DataInit(db); err != nil {
-		slog.Error("error:", err.Error())
-	}
+	//if err := modeler.NewAdministrator().DataInit(db); err != nil {
+	//	slog.Error("error:", err.Error())
+	//}
+	//if err := modeler.NewRole().DataInit(db); err != nil {
+	//	slog.Error("error:", err.Error())
+	//}
+	//if err := modeler.NewPermission().DataInit(db); err != nil {
+	//	slog.Error("error:", err.Error())
+	//}
 }
 
 func dataOtherInit(db *gorm.DB, slog *zap.SugaredLogger) {

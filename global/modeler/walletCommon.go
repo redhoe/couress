@@ -15,6 +15,8 @@ const (
 
 	CurrencyShowDecimal int32 = 2 // 转化为法币价值保留小数位
 	PriceDecimal              = 4 // 货币单价转化为法币价值保留小数位
+
+	MarketShowDecimal int32 = 6
 )
 
 type WalletType string

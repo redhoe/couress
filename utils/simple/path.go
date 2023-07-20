@@ -26,10 +26,14 @@ func ToPath(args ...string) string {
 	}
 	strList := make([]string, 0)
 	for i, p := range args {
+		if strings.TrimSpace(p) == "" {
+			continue
+		}
 		if i == 0 {
 			strList = append(strList, strings.TrimRight(strings.TrimSpace(p), "/"))
 			continue
 		}
+
 		strList = append(strList, strings.Trim(strings.TrimSpace(p), "/"))
 	}
 	return strings.Join(strList, "/")
